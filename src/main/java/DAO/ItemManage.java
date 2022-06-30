@@ -6,9 +6,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class ItemManage {
     DBClass dc = new DBClass();
+    Scanner sc = new Scanner(System.in);
     //item 데이터 삽입 메소드
     public void insertItem(String name, String att, String dam, String hyo) {
 
@@ -117,5 +119,27 @@ public class ItemManage {
                 e.printStackTrace();
             }
         }
+    }
+    public void itemInfo(){
+        // 아이템 정보 추가
+        // db에 아이템 정보 삽입 / 출력
+        System.out.println("아이템 등록");
+        System.out.print("이름 입력 : ");
+        String i_name = sc.nextLine();
+        System.out.print("속성 입력 : ");
+        String att = sc.nextLine();
+        System.out.print("공격력 입력 : ");
+        int dam = sc.nextInt();
+        sc.nextLine();
+        System.out.print("효과 입력 : ");
+        String hyo = sc.nextLine();
+
+        Item item = new Item();
+        item.setName(i_name);
+        item.setAtt(att);
+        item.setDam(dam);
+        item.setHyo(hyo);
+
+        insertItem(item);
     }
 }

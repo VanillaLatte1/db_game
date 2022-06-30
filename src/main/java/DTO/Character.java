@@ -37,4 +37,5 @@ public class Character {
     public void setJob(String job) {
         this.job = job;
     }
+
 }

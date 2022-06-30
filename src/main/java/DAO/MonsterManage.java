@@ -6,9 +6,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class MonsterManage {
     DBClass dc = new DBClass();
+    Scanner sc = new Scanner(System.in);
     //monster 데이터 삽입 메소드
     public void insertMonster(String name, String hp) {
         //쿼리문 준비
@@ -72,7 +74,7 @@ public class MonsterManage {
     }
 
     //monster 데이터 조회(검색) 메소드
-    public void selectMonster() {
+    public void selectMon() {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         Connection conn = dc.dbConn();
@@ -107,5 +109,22 @@ public class MonsterManage {
                 e.printStackTrace();
             }
         }
+    }
+    public void monInfo(){
+        // 몬스터 정보 추가
+        //db에 monster 정보 삽입 / 출력
+        System.out.println("몬스터 등록");
+        System.out.print("이름 입력 : ");
+        String m_name = sc.nextLine();
+        System.out.print("hp 설정 : ");
+        int m_hp = sc.nextInt();
+        sc.nextLine();
+
+        Monster monster = new Monster();
+
+        monster.setName(m_name);
+        monster.setHp(m_hp);
+
+        insertMonster(monster);
     }
 }

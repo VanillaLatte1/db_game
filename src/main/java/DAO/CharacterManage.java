@@ -6,9 +6,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class CharacterManage {
     DBClass dc = new DBClass();
+    Scanner sc = new Scanner(System.in);
     //character 데이터 삽입 메소드
     public void insertCharacter(String name, int hp, String job) {
 
@@ -75,7 +77,7 @@ public class CharacterManage {
     }
 
     //character 데이터 조회(검색) 메소드
-    public void selectCharacter() {
+    public void selectChar() {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         Connection conn = dc.dbConn();
@@ -112,5 +114,60 @@ public class CharacterManage {
             }
         }
     }
+    public void charInfo(){
+        // 캐릭터 정보 추가
+        //db에 character 정보 삽입 / 출력
+        System.out.println("캐릭터 등록");
+        System.out.print("이름 입력 : ");
+        String c_name = sc.nextLine();
+        System.out.print("hp 설정 : ");
+        int c_hp = sc.nextInt();
+        sc.nextLine();
+        System.out.print("직업 설정 : ");
+        String job = sc.nextLine();
 
+        Character character = new Character();
+        character.setName(c_name);
+        character.setHp(c_hp);
+        character.setJob(job);
+
+        insertCharacter(c_name, c_hp, job);
+    }
+
+    public void selectChar3(String Playername) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Connection conn = dc.dbConn();
+
+        try {
+            String sql = "select * from tb_character where name = ?";
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, Playername);
+            rs = pstmt.executeQuery();
+            //rs.getString(1, name);
+            System.out.println(Playername);
+//            while (rs.next()) {
+//                String name = rs.getString("name");
+//                System.out.println("캐릭터 이름 : " + name);
+//            }
+        } catch (SQLException e) {
+            System.out.println("error: " + e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
