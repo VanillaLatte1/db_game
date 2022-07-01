@@ -64,6 +64,7 @@ public class MainClass {
                     String Playername = sc.next();
                     cm.selectChar3(Playername);
 
+
                 } else {
                     System.out.println("데이터가 없습니다. 데이터 설정을 해주세요.");
                     continue;

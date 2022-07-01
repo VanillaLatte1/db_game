@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class CharacterManage {
     DBClass dc = new DBClass();
     Scanner sc = new Scanner(System.in);
+
     //character 데이터 삽입 메소드
     public void insertCharacter(String name, int hp, String job) {
 
@@ -114,24 +115,25 @@ public class CharacterManage {
             }
         }
     }
-    public void charInfo(){
+
+    public void charInfo() {
         // 캐릭터 정보 추가
         //db에 character 정보 삽입 / 출력
         System.out.println("캐릭터 등록");
         System.out.print("이름 입력 : ");
-        String c_name = sc.nextLine();
+        String name = sc.nextLine();
         System.out.print("hp 설정 : ");
-        int c_hp = sc.nextInt();
+        int hp = sc.nextInt();
         sc.nextLine();
         System.out.print("직업 설정 : ");
         String job = sc.nextLine();
 
         Character character = new Character();
-        character.setName(c_name);
-        character.setHp(c_hp);
+        character.setName(name);
+        character.setHp(hp);
         character.setJob(job);
 
-        insertCharacter(c_name, c_hp, job);
+        insertCharacter(name, hp, job);
     }
 
     public void selectChar3(String Playername) {
@@ -145,12 +147,18 @@ public class CharacterManage {
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, Playername);
             rs = pstmt.executeQuery();
-            //rs.getString(1, name);
-            System.out.println(Playername);
-//            while (rs.next()) {
-//                String name = rs.getString("name");
-//                System.out.println("캐릭터 이름 : " + name);
-//            }
+            while (rs.next()) {
+                Character cha = new Character();
+//                String name = (rs.getString("name");
+//                int hp = rs.getInt("hp");
+//                String job = rs.getString("job");
+
+                cha.setName(rs.getString("name"));
+                cha.setHp(rs.getInt("hp"));
+                cha.setJob(rs.getString("job"));
+
+                System.out.println("캐릭터 이름 : " + cha.getName() + " / HP : " + cha.getHp() + " / 직업 : " + cha.getJob());
+            }
         } catch (SQLException e) {
             System.out.println("error: " + e);
         } finally {
