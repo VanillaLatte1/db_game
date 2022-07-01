@@ -127,4 +127,7 @@ public class MonsterManage {
 
         insertMonster(monster);
     }
+    public void battleMon(){
+
+    }
 }

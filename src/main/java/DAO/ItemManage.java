@@ -1,7 +1,9 @@
 package DAO;
 
+import DTO.Character;
 import DTO.Item;
 
+import java.lang.management.MonitorInfo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -142,4 +144,89 @@ public class ItemManage {
 
         insertItem(item);
     }
+    public void deleteItem(Item item) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Connection conn = dc.dbConn();
+
+        String name = null;
+        try {
+            String sql = "delete from tb_character where id = ?";
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, item.getId());
+            rs = pstmt.executeQuery();
+
+        } catch (SQLException e) {
+            System.out.println("error: " + e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void delete(){
+        ItemManage im = new ItemManage();
+        System.out.print("삭제할 몬스터를 고르시오(이름) : ");
+        String d = sc.next();
+        Character cha = im.selectItem(d);
+        System.out.println(cha.getId());
+        im.deleteItem(cha);
+
+        System.out.println(cha.getName() + "이(가) 삭제되었습니다.");
+    }
+    public Character selectItem(String itemName) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Connection conn = dc.dbConn();
+        Item item = new Item();
+        //String name = null;
+
+        try {
+            String sql = "select * from item where name = ?";
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, itemName);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+
+                item.setName(rs.getString("name"));
+                item.setAtt(rs.getString("att"));
+                item.setDam(rs.getInt("dam"));
+                item.setHyo(rs.getString("hyo"));
+
+                System.out.println("선택한 캐릭터 : " + item.getName() + " | " + item.getAtt() + " | " + item.getDam() + " | " + item.getHyo());
+            }
+        } catch (SQLException e) {
+            System.out.println("error: " + e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return item;
+    }
 }
+

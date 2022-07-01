@@ -136,28 +136,30 @@ public class CharacterManage {
         insertCharacter(name, hp, job);
     }
 
-    public void selectChar3(String Playername) {
+    public Character selectChar(String playerName) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         Connection conn = dc.dbConn();
+        Character cha = new Character();
 
+        String name = null;
         try {
             String sql = "select * from tb_character where name = ?";
 
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, Playername);
+            pstmt.setString(1, playerName);
             rs = pstmt.executeQuery();
             while (rs.next()) {
-                Character cha = new Character();
+
 //                String name = (rs.getString("name");
 //                int hp = rs.getInt("hp");
 //                String job = rs.getString("job");
-
+                cha.setId(rs.getInt("id"));
                 cha.setName(rs.getString("name"));
                 cha.setHp(rs.getInt("hp"));
                 cha.setJob(rs.getString("job"));
 
-                System.out.println("캐릭터 이름 : " + cha.getName() + " / HP : " + cha.getHp() + " / 직업 : " + cha.getJob());
+                System.out.println("선택한 캐릭터 : " + cha.getName() + " | " + cha.getHp() + " | " + cha.getJob());
             }
         } catch (SQLException e) {
             System.out.println("error: " + e);
@@ -177,5 +179,78 @@ public class CharacterManage {
                 e.printStackTrace();
             }
         }
+        return cha;
+    }
+
+    public void update(int hp, int id) {
+        //쿼리문 준비
+        String sql = "UPDATE `tb_character` SET `hp`= ? WHERE  `id`= ?";
+        PreparedStatement pstmt = null;
+        Connection conn = dc.dbConn();   // db 연결 메소드
+        try {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, hp);
+            pstmt.setInt(2, id);
+
+            int result = pstmt.executeUpdate();
+            if (result == 1) {
+                System.out.println("데이터 삽입 성공!");
+            }
+
+        } catch (Exception e) {
+            System.out.println("데이터 삽입 실패!");
+        } finally {
+            try {
+                if (pstmt != null && !pstmt.isClosed()) {
+                    pstmt.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+
+    public void deleteChar(Character cha) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Connection conn = dc.dbConn();
+
+        String name = null;
+        try {
+            String sql = "delete from tb_character where id = ?";
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, cha.getId());
+            rs = pstmt.executeQuery();
+
+        } catch (SQLException e) {
+            System.out.println("error: " + e);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+
+                if (conn != null && !conn.isClosed()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void delete(){
+        CharacterManage cm = new CharacterManage();
+        System.out.println("삭제할 캐릭터를 고르시오(이름) : ");
+        String d = sc.next();
+        Character cha = cm.selectChar(d);
+        System.out.println(cha.getId());
+        cm.deleteChar(cha);
+
+        System.out.println(cha.getName() + "이(가) 삭제되었습니다.");
     }
 }
